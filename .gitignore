@@ -1,0 +1,9 @@
+venv/
+media/
+media_cdn/
+__pycache__/
+accounts.log
+.vscode/
+crud_operation/.env 
+static/
+static_cdn/
