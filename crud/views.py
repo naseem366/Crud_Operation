@@ -3,12 +3,11 @@ from rest_framework.generics import (CreateAPIView,GenericAPIView,)
 from django.shortcuts import render
 from .models import *
 from rest_framework.permissions import IsAuthenticated, AllowAny
-
 #Crud Operation By Html,Css and JavaScript(Web)
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.shortcuts import render, redirect  
-from crud.forms import EmployeeForm 
+from crud.forms import EmployeeForm,EmployeeForm1
 
 class CreateAndGetTaskView(TemplateView):
     def get(self,request,*args,**kwargs):
@@ -34,7 +33,7 @@ def edit(request,id):
 
 def update(request,id):
     emp=TaskTable.objects.get(id=id)
-    form=EmployeeForm(request.POST,instance=emp)
+    form=EmployeeForm1(request.POST,instance=emp)
     if form.is_valid():
         form.save()
         return redirect('GetTaskView')
