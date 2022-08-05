@@ -32,6 +32,16 @@ class File(models.Model):
     created_on=models.DateTimeField(auto_now_add=True)
     
 
+class StudentDetail(models.Model):
+    first_name=models.CharField(max_length=50,blank=True,null=True)
+    last_name=models.CharField(max_length=50,blank=True,null=True)
+    gender=models.CharField(max_length=50,blank=True,null=True)
+    country=models.CharField(max_length=50,blank=True,null=True)
+    age=models.CharField(max_length=50,blank=True,null=True)
+    student_id=models.CharField(max_length=50,blank=True,null=True)
+    created_on=models.DateTimeField(auto_now_add=True)
+
+
 class UploadFile(models.Model):
     file=models.FileField(upload_to='file')
 

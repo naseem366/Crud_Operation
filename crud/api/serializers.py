@@ -125,3 +125,7 @@ class ListUserAddressSerializer(ModelSerializer):
         fields='__all__'
 
 
+class StudentSerializer(ModelSerializer):
+    class Meta:
+        model=StudentDetail
+        fields='__all__'

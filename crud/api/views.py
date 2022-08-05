@@ -141,19 +141,51 @@ class delete_address(APIView):
         return Response({'message':"Address Is not exists"}, status=HTTP_400_BAD_REQUEST)
 
 
-
 import pandas as pd
-from django.conf import Settings
+from django.conf import settings
 import uuid
+import json
+from collections import namedtuple
+import random
 
 class ExportExcle(APIView):
+    def get(self,request):
+        student=StudentDetail.objects.all()
+        serializer=StudentSerializer(student,many=True)
+        df=pd.DataFrame(serializer.data)
+        print(df)
+        df.to_excel(f"{settings.BASE_DIR}/media_cdn/file/{uuid.uuid4()}.xls",encoding="UTF-8",index=False)
+        return Response({'message':'Get Data successfully'},status=HTTP_200_OK)
+
+# [1, 'mohd', 'naseem', 'male', 'india', 25, 1234, '2022-07-30T13:25:16.252122+05:30']
+# [3, 'mohd', 'samim', 'male', 'india', 23, 12345, '2022-07-30T17:46:42.730053+05:30']
+# [4, 'abdul', 'bari', 'male', 'india', 40, 2342, '2022-07-30T17:47:27.511290+05:30']
+
     def post(self,request):
         file_obj=UploadFile.objects.create(file=request.FILES['file'])
-        df=pd.read_csv(f"{settings.BASE_DIR}/media_cdn/{file_obj.file}",encoding='ISO-8859-1',header=None, engine='c',lineterminator='\n', sep=';')
-        for student in (df.values.tolist()):
-            # data={
-            # 'student':student[0]
-            # }
-            print(student)
-        return Response({'message':'Image and File has been successfully Upload'},status=HTTP_200_OK)
+        df=pd.read_excel(f"{settings.BASE_DIR}/media_cdn/{file_obj.file}")
+
+        student=(df['First Name'].tolist())
+        print(student)
+        s1 = json.dumps(student)
+        x = json.loads(s1, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+        lower="abcdefghijklmnopqrstuvwxyz"
+        upper="ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        number="0123456789"
+        symbols="[]{}()*;/,_-"
+        all=str(lower) + str(upper) + str(number) + str(symbols)
+        length=20
+        password="".join(random.sample(all,length))
+        password1="".join(random.sample(all,length))
+        password2="".join(random.sample(all,length))
+        data={
+            'name1':x[0],
+            'password on first_name':password,
+            'name2':x[1],
+            'password on secound_name':password1,
+            'name3':x[2],
+            'password on third_name':password2,
+
+        }
+        return Response({'message':'File has been successfully Upload','data':data},status=HTTP_200_OK)
 
