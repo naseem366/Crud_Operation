@@ -24,3 +24,16 @@ class TaskTable(models.Model):
         return str(self.name)
 
 
+
+class File(models.Model):
+    name1=models.CharField(max_length=50,blank=True,null=True)
+    name2=models.CharField(max_length=50,blank=True,null=True)
+    name3=models.CharField(max_length=50,blank=True,null=True)
+    created_on=models.DateTimeField(auto_now_add=True)
+    
+
+class UploadFile(models.Model):
+    file=models.FileField(upload_to='file')
+
+    def __str__(self):
+        return str(self.file)

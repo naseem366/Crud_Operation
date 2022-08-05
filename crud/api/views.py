@@ -140,3 +140,20 @@ class delete_address(APIView):
             return Response({'data':"Address successfully delete"},status=HTTP_200_OK)
         return Response({'message':"Address Is not exists"}, status=HTTP_400_BAD_REQUEST)
 
+
+
+import pandas as pd
+from django.conf import Settings
+import uuid
+
+class ExportExcle(APIView):
+    def post(self,request):
+        file_obj=UploadFile.objects.create(file=request.FILES['file'])
+        df=pd.read_csv(f"{settings.BASE_DIR}/media_cdn/{file_obj.file}",encoding='ISO-8859-1',header=None, engine='c',lineterminator='\n', sep=';')
+        for student in (df.values.tolist()):
+            # data={
+            # 'student':student[0]
+            # }
+            print(student)
+        return Response({'message':'Image and File has been successfully Upload'},status=HTTP_200_OK)
+

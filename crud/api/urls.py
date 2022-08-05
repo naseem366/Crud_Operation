@@ -11,4 +11,5 @@ urlpatterns = [
     path('CreateUserAddressAPIView',CreateUserAddressAPIView.as_view()),
     path('get_single_address',get_single_address.as_view()),
     path('delete_address',delete_address.as_view()),
+    path('ExportExcle',ExportExcle.as_view()),
 ]

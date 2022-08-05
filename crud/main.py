@@ -14,3 +14,11 @@ def read_root():
 def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
 
+
+#add this to main.py above the point where you initialized FastAPI
+#import
+from crud.models1 import *
+from crud.db import engine
+
+#create the database tables on app startup or reload
+models.Base.metadata.create_all(bind=engine)
