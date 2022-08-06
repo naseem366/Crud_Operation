@@ -13,6 +13,9 @@ urlpatterns = [
     path("edit/<int:id>",edit,name="edit"),
     path("update/<int:id>",update,name="update"),
     path("delete/<int:id>",delete,name="delete"),
+
+    path("render_pdf_view",render_pdf_view,name="render_pdf_view"),
+    path("index",index,name="index")
     #path("show",show,name="show")
     
     

@@ -164,7 +164,8 @@ class ExportExcle(APIView):
     def post(self,request):
         file_obj=UploadFile.objects.create(file=request.FILES['file'])
         df=pd.read_excel(f"{settings.BASE_DIR}/media_cdn/{file_obj.file}")
-
+        for student1 in (df.values.tolist()):
+            print(student1)
         student=(df['First Name'].tolist())
         print(student)
         s1 = json.dumps(student)
@@ -188,4 +189,48 @@ class ExportExcle(APIView):
 
         }
         return Response({'message':'File has been successfully Upload','data':data},status=HTTP_200_OK)
+
+from io import BytesIO
+import datetime
+import xhtml2pdf.pisa as pisa
+from django.template.loader import get_template
+
+def save_pdf(params:dict):
+    template=get_template('crud_temp/show.html')
+    html=template.render(params)
+    response=BytesIO()
+    pdf=pisa.pisaDocument(BytesIO(html.encode('UTF-8')) ,response)
+    print("Hello Hello Hello Hello Hello Hello Naseem ",pdf)
+    file_name=uuid.uuid4()
+    try:
+        with open(str(settings.BASE_DIR) + f'/media_cdn/file/{file_name}.pdf' , 'w+b') as output:
+            pdf=pisa.pisaDocument(BytesIO(html.encode('UTF-8')) ,output)
+
+    except Exception as e:
+        print(e)
+
+    if pdf.err:
+        return '',False
+
+    return file_name,True
+
+class GeneratePdf(APIView):
+    def get(self,request):
+        student_obj=TaskTable.objects.all()
+        print("@@@@@@@@@@@@@@@@############**********",student_obj)
+        params={
+        'today':datetime.date.today(),
+        'student_obj':student_obj
+        }
+        file_name,status = save_pdf(params)
+        print(file_name,status,"dfjghfdjgdfkjgdf rtitiurt eruty weruth rut ytr u")
+        print("HHHHHHHHHHHIIIIIIIIIIIIUUUUUUUUUUTTTTTTTTTRRRRRRRRREEEEEEEEEEEEWWWWW",params)
+        if not status:
+            return Response({'status':"400"})
+
+        return Response({'status':'200','path':f'/media_cdn/file/{file_name}.pdf'})
+
+
+    def post(self,request):
+        return Response({'message':"hello Post"})
 

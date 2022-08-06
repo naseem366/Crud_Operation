@@ -43,3 +43,38 @@ def delete(request,id):
     emp=TaskTable.objects.get(id=id)
     emp.delete()
     return redirect('GetTaskView')
+
+from django.http import HttpResponse
+from io import BytesIO
+import datetime
+import xhtml2pdf.pisa as pisa
+from xhtml2pdf import pisa
+from django.template.loader import get_template
+
+
+def index(request):
+    students=StudentDetail.objects.all()
+    return render(request,'crud_temp/pdf.html',{'students':students})
+
+def render_pdf_view(request):
+    task_obj=StudentDetail.objects.all()
+    print(task_obj)
+    template_path = "crud_temp/pdf.html"
+    context = {'task_obj': task_obj}
+    print(context,"helololololo")
+
+    # Create a Django response object, and specify content_type as pdf
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'filename="task_obj.pdf"'
+
+    # find the template and render it.
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # create a pdf
+    pisa_status = pisa.CreatePDF(html, dest=response)
+
+    # if error then show some funny view
+    if pisa_status.err:
+       return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
